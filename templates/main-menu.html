@@ -1,0 +1,16 @@
+<div class="hidden sm:flex flex-1 justify-end items-center space-x-1 mr-10">
+    {% for item in nav_items %}
+    {% if item.has_submenu %}
+    <div class="group py-5 px-3 hover:bg-red-500">
+        <button hx-get="{{ item.href }}" hx-target="#main-content-pane" hx-target-error="#hero-alert-placeholder" hx-swap="innerHTML" class="focus:outline-none">{{ item.title }}</button>
+        <div class="absolute hidden group-hover:block bg-white shadow-md mt-1">
+            {% for submenu_item in item.submenu %}
+            <a href="{{ submenu_item.href }}" class="block px-4 py-2 text-black hover:bg-gray-100">{{ submenu_item.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <a {% if item.is_home %} href="/hey" {% else %} hx-get="{{ item.href }}" hx-target="#main-content-pane" hx-swap="innerHTML" {% endif %} class="py-5 px-3 hover:bg-red-500 cursor-pointer">{{ item.title }}</a>
+    {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,26 @@
+<div class="mobile-menu block sm:hidden flex flex-wrap m-4">
+    {% for item in nav_items %}
+    {% if item.has_submenu %}
+    <div class="group relative m-4 bg-white rounded-lg shadow-md overflow-hidden w-56 h-72">
+        <button hx-get="{{ item.href }}" hx-target="#main-content-pane" hx-swap="innerHTML" class="absolute inset-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform transition duration-150 ease-in-out hover:scale-105">
+            <div class="p-6">
+                <h5 class="text-lg font-semibold mb-2">{{ item.title }}</h5>
+                <p class="text-red-500 text-base mb-4">{{ item.title }} details</p>
+            </div>
+        </button>
+        <div class="absolute bottom-0 left-0 w-full hidden group-hover:flex flex-col bg-white text-black items-center">
+            {% for submenu in item.submenu %}
+            <a href="{{ submenu.href }}" class="px-4 py-2 hover:bg-gray-100 focus:ring-2 focus:ring-opacity-50 transform transition duration-150 ease-in-out hover:scale-105">{{ submenu.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <button {% if item.is_home %} href="/hey" {% else %} hx-get="{{ item.href }}" hx-target="#main-content-pane" hx-swap="innerHTML" {% endif %} class="m-4 bg-white rounded-lg shadow-md overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform transition duration-150 ease-in-out hover:scale-105 w-56 h-72">
+        <div class="p-6">
+            <h5 class="text-lg font-semibold mb-2">{{ item.title }}</h5>
+            <p class="text-red-500 text-base mb-4">{{ item.title }} details</p>
+        </div>
+    </button>
+    {% endif %}
+    {% endfor %}
+</div>

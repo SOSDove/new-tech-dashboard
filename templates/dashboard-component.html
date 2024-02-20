@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/3p/htmx.min.js" ></script>
+    <script src="/static/3p/htmx.retarget.js"></script>
+    <title>New Tech Dashboard</title>
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+        }
+
+        @keyframes fade-out {
+            to { opacity: 0; }
+        }
+
+        @keyframes slide-from-right {
+            from { transform: translateX(90px); }
+        }
+
+        @keyframes slide-to-left {
+            to { transform: translateX(-90px); }
+        }
+
+        .hero-alert-placeholder {
+            view-transition-name: slide-it;
+        }
+
+        ::view-transition-old(slide-it) {
+            animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+        }
+        ::view-transition-new(slide-it) {
+            animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+            600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+        }
+        .fade-out {
+            animation: fade-out 1s ease forwards;
+        }
+        .blur-backdrop {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100" hx-ext="response-targets">
+<nav class="bg-gray-300">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center"> <!-- Added items-center here -->
+            <!-- logo always centered -->
+            <div class="flex-1 flex justify-center h-36 sm:justify-start mt-[-3rem]"> <!-- Adjusted for centering -->
+                <a href="/hey" class="py-5 px-2">
+                    <img src="https://www.sos.eu/dist/images/sos_logo_primary.svg" alt="SOS Logo" class="w-36 h-36">
+                </a>
+            </div>
+
+            <!-- primary nav -->
+            <!-- Assuming this is inside dashboard-component.html or similar -->
+        {% include "main-menu.html" %}
+        </div>
+    </div>
+</nav>
+<!-- This is your template file, e.g., dashboard-component.html -->
+<div id="modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+<div id="modal-container" class="hidden"></div>
+<div id="main-content-pane">
+    {% include "mobil-menu.html" %}
+    <div class="hidden sm:block">
+        {% include "welcome.html" %}
+    </div>
+</div>
+<div class="hero-alert-placeholder" id="hero-alert-placeholder"></div>
+</body>
+<script>
+    document.body.addEventListener("htmx:afterSwap", function (event) {
+        if (event.detail.target.id === "hero-alert-placeholder") {
+            document.getElementById('modal-container').style.display = 'none'; // Hide the modal container
+            setTimeout(function () {
+                document.getElementById("hero-alert-placeholder").classList.add("fade-out");
+            }, 3000);
+        }
+
+    });
+
+    document.body.addEventListener("htmx:afterSwap", function(event) {
+        const closeModal = document.querySelector('.close-modal'); // Assuming this is dynamically loaded
+        if (closeModal) {
+            closeModal.addEventListener('click', closeModalFunction); // Ensure closeModalFunction is defined
+        }
+
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        const modalContainer = document.getElementById('modal-container');
+        if (event.detail.target.id === "modal-container" && !modalContainer.style.display === true) {
+            modalContainer.style.display = 'block';
+            if (modalBackdrop) modalBackdrop.classList.remove('hidden');
+            document.getElementById('main-content-pane').classList.add('blur-backdrop'); // Apply blur to main content only
+        } else {
+            closeModalFunction();
+        }
+    });
+
+    function closeModalFunction() {
+        const modalContainer = document.getElementById('modal-container');
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalContainer) modalContainer.style.display = 'none';
+        if (modalBackdrop) modalBackdrop.classList.add('hidden');
+        document.getElementById('main-content-pane').classList.remove('blur-backdrop'); // Remove blur from main content
+    }
+</script>
+</html>

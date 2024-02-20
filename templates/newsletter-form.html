@@ -1,0 +1,13 @@
+<div class="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-5 rounded-lg w-96 shadow-lg">
+    <span class="close-modal float-right cursor-pointer text-2xl text-black">&times;</span>
+    <h2 class="text-black text-lg font-semibold mt-0">Subscribe to Our Newsletter</h2>
+    <form id="newsletter-form" hx-post="/newsletter" hx-target="#hero-alert-placeholder" hx-target-error="#hero-alert-placeholder" hx-swap="outerHTML transition:true" class="mt-5">
+        <div class="mb-4">
+            <label for="email" class="block mb-2 text-black">Email Address</label>
+            <input type="email" id="email" name="email" required class="w-full p-2 border border-red-500 rounded bg-white">
+        </div>
+        <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded cursor-pointer hover:bg-red-600">
+            Subscribe
+        </button>
+    </form>
+</div>
